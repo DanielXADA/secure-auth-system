@@ -15,7 +15,10 @@ export default class AuthView {
 
     const mapa = { cadastro: 0, login: 1, '2fa': 2 };
     document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.nav-tab')[mapa[tabName]].classList.add('active');
+    
+    if(mapa[tabName] < 2) {
+      document.querySelectorAll('.nav-tab')[mapa[tabName]].classList.add('active');
+    }
   }
 
   showAlert(id, tipo, mensagem) {
@@ -28,6 +31,14 @@ export default class AuthView {
     const el = document.getElementById(id);
     el.className = 'alert';
     el.innerHTML = '';
+  }
+
+  togglePassword(input, btn) {
+    const mostrar = input.type === 'password';
+    input.type = mostrar ? 'text' : 'password';
+    btn.innerHTML = mostrar 
+      ? '<span style="font-size:10px; color:var(--cyan);">OCULTAR</span>' 
+      : '<span style="font-size:10px; color:var(--text-muted);">MOSTRAR</span>';
   }
 
   updatePasswordStrength(score, checks) {
@@ -62,5 +73,26 @@ export default class AuthView {
       else dot.classList.remove('used');
     }
     label.textContent = `${restantes} tentativa(s) restante(s)`;
+  }
+  
+  updatePasswordMatch(isMatch, isEmpty) {
+    const inputSenha = document.getElementById('cad-senha');
+    const inputConfirma = document.getElementById('cad-confirma');
+
+    if (isEmpty) {
+      inputConfirma.classList.remove('error', 'success');
+      inputSenha.classList.remove('success');
+      return;
+    }
+
+    if (isMatch) {
+      inputConfirma.classList.remove('error');
+      inputConfirma.classList.add('success');
+      inputSenha.classList.add('success');
+    } else {
+      inputConfirma.classList.remove('success');
+      inputConfirma.classList.add('error');
+      inputSenha.classList.remove('success');
+    }
   }
 }
