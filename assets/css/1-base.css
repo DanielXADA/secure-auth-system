@@ -1,0 +1,90 @@
+/* cores, fontes e css geral */
+:root {
+  --bg-void:        #050810;
+  --bg-deep:        #090d1a;
+  --bg-surface:     #0e1428;
+  --bg-card:        #111827;
+  --bg-input:       #0c1020;
+
+  --cyan:           #00e5ff;
+  --cyan-dim:       #00b8cc;
+  --cyan-glow:      rgba(0, 229, 255, 0.15);
+  --violet:         #7c3aed;
+  --violet-dim:     #6d28d9;
+  --violet-glow:    rgba(124, 58, 237, 0.2);
+  --green-ok:       #10b981;
+  --green-glow:     rgba(16, 185, 129, 0.2);
+  --red-err:        #ef4444;
+  --red-glow:       rgba(239, 68, 68, 0.2);
+  --amber:          #f59e0b;
+
+  --text-primary:   #e2e8f0;
+  --text-secondary: #64748b;
+  --text-muted:     #334155;
+
+  --border-dark:    rgba(255, 255, 255, 0.06);
+  --border-mid:     rgba(0, 229, 255, 0.2);
+
+  --radius-sm:      6px;
+  --radius-md:      10px;
+  --radius-lg:      16px;
+  --radius-xl:      24px;
+
+  --font-display:   Arial, Helvetica, sans-serif;
+  --font-mono:      Arial, Helvetica, sans-serif;
+  --font-body:      Arial, Helvetica, sans-serif;
+
+  --transition:     all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  min-height: 100vh;
+  background: var(--bg-void);
+  font-family: var(--font-body);
+  color: var(--text-primary);
+  overflow-x: hidden;
+}
+
+/* fundo com grade tec */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0, 229, 255, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 229, 255, 0.025) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Efeito de shiny central */
+body::after {
+  content: '';
+  position: fixed;
+  top: -30%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 800px;
+  height: 600px;
+  background: radial-gradient(ellipse at center,
+    rgba(124, 58, 237, 0.12) 0%,
+    rgba(0, 229, 255, 0.05) 40%,
+    transparent 70%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* responsividade geral */
+@media (max-width: 480px) {
+  body {
+    font-size: 14px;
+  }
+}

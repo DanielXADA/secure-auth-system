@@ -1,0 +1,122 @@
+/*est. e cont. geral*/
+.app-wrapper {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem 1rem;
+}
+
+/*logo*/
+.app-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.app-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.logo-icon {
+  width: 40px;
+  height: 40px;
+  border: 2px solid var(--cyan);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 16px var(--cyan-glow), inset 0 0 8px rgba(0,229,255,0.1);
+}
+
+.logo-icon svg { width: 20px; height: 20px; stroke: var(--cyan); }
+
+.logo-text {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: var(--cyan);
+  text-shadow: 0 0 20px rgba(0, 229, 255, 0.4);
+}
+
+.logo-tagline {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+/* abas de nav */
+.nav-tabs {
+  display: flex;
+  gap: 2px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-dark);
+  border-radius: var(--radius-md);
+  padding: 4px;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+}
+
+.nav-tab {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.nav-tab:hover { color: var(--text-primary); background: rgba(255,255,255,0.05); }
+.nav-tab.active { background: rgba(0, 229, 255, 0.1); color: var(--cyan); box-shadow: 0 0 10px rgba(0,229,255,0.15); }
+
+/* card do form */
+.form-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-dark);
+  border-radius: var(--radius-xl);
+  padding: 2.5rem;
+  width: 100%;
+  max-width: 440px;
+  box-shadow: 0 0 0 1px rgba(0, 229, 255, 0.04), 0 20px 60px rgba(0, 0, 0, 0.6), 0 0 60px rgba(124, 58, 237, 0.06);
+  position: relative;
+  animation: cardIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(20px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.tela { display: none; }
+.tela.ativa { display: block; }
+
+/* rodape */
+.security-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 2rem;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: var(--text-muted);
+}
+.security-footer svg { width: 11px; height: 11px; stroke: var(--text-muted); }
+
+/* layout */
+@media (max-width: 480px) {
+  .form-card { padding: 1.75rem 1.25rem; border-radius: var(--radius-lg); }
+  .nav-tabs { flex-wrap: wrap; gap: 4px; }
+  .nav-tab { font-size: 0.62rem; padding: 0.45rem 0.75rem; }
+}
