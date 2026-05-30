@@ -11,15 +11,14 @@ export default class AuthController {
     this.setupPasswordValidation();
     this.setupCadastroFlow();
     this.setupLoginFlow();
-    this.setup2FAFlow(); 
+    this.setup2FAFlow();
   }
 
   setupNavigation() {
-    // Navegação abas.
     const tabs = document.querySelectorAll('.nav-tab');
     tabs.forEach((btn) => {
       btn.addEventListener('click', (e) => {
-        const tabName = e.currentTarget.getAttribute('data-tab'); 
+        const tabName = e.currentTarget.getAttribute('data-tab');
         this.view.switchTab(tabName);
       });
     });
@@ -73,10 +72,9 @@ export default class AuthController {
     });
   }
 
-  // Fluxo cadastro.
   setupCadastroFlow() {
     document.getElementById('form-cadastro').addEventListener('submit', async (e) => {
-      e.preventDefault(); 
+      e.preventDefault();
       this.view.hideAlert('cadastro-alert');
 
       const nome = document.getElementById('cad-nome').value.trim();
@@ -89,14 +87,12 @@ export default class AuthController {
         return;
       }
 
-      // Senha diferente.
       if (senha !== confirma) {
         this.view.showAlert('cadastro-alert', 'error', 'As senhas não coincidem.');
         return;
       }
 
       try {
-        // Fetch cadastro.
         const response = await fetch('backend/cadastro.php', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -106,42 +102,36 @@ export default class AuthController {
         const data = await response.json();
 
         if (data.success) {
-          this.view.showAlert('cadastro-alert', 'success', 'Conta pré-registrada! Verifique o código enviado ao seu e-mail.');
-          
-          window.emailEmVerificacao = email; 
-
+          this.view.showAlert('cadastro-alert', 'success', 'Conta pré-registrada! Verifique o código enviado.');
+          window.emailEmVerificacao = email;
           setTimeout(() => {
             this.view.switchTab('2fa');
-            document.getElementById('pin-0').focus(); 
+            document.getElementById('pin-0').focus();
           }, 1500);
         } else {
           this.view.showAlert('cadastro-alert', 'error', data.message || 'Erro ao criar conta.');
         }
-
       } catch (error) {
-        this.view.showAlert('cadastro-alert', 'error', 'Falha na conexão com o servidor de cadastro.');
+        this.view.showAlert('cadastro-alert', 'error', 'Falha na conexão com o servidor.');
       }
     });
   }
 
-  // Fluxo login.
   setupLoginFlow() {
     document.getElementById('form-login').addEventListener('submit', async (e) => {
-      e.preventDefault(); 
+      e.preventDefault();
       
       if (this.model.loginState.bloqueado) return;
 
       const email = document.getElementById('login-email').value.trim();
       const senha = document.getElementById('login-senha').value;
 
-      // Campos vazios.
       if (!email || !senha) {
         this.view.showAlert('login-alert', 'error', 'Preencha e-mail e senha.');
         return;
       }
 
       try {
-        // Fetch login.
         const response = await fetch('backend/login.php', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -151,33 +141,32 @@ export default class AuthController {
         const data = await response.json();
 
         if (data.success) {
-          // Acesso OK.
           this.view.showAlert('login-alert', 'success', 'Acesso autorizado! Redirecionando...');
-          setTimeout(() => { alert('Entrou no sistema com sucesso!'); }, 1000);
+          setTimeout(() => { 
+            window.location.href = 'dashboard.html'; 
+          }, 1000);
         } else {
-          // Acesso negado.
           const state = this.model.registerLoginFailure();
           this.view.updateBruteForceDots(state.tentativas, state.maxTentativas);
           
           if (data.is_blocked || state.bloqueado) {
-            this.view.showAlert('login-alert', 'error', data.message || 'ACESSO BLOQUEADO POR BRUTE FORCE!');
+            this.view.showAlert('login-alert', 'error', data.message || 'ACESSO BLOQUEADO POR SEGURANÇA!');
           } else {
             this.view.showAlert('login-alert', 'error', data.message || 'Usuário ou senha incorretos.');
           }
         }
       } catch (error) {
-        this.view.showAlert('login-alert', 'error', 'Falha na conexão com o sistema de login.');
+        this.view.showAlert('login-alert', 'error', 'Falha na conexão com o servidor.');
       }
     });
   }
 
-  // Fluxo 2FA.
   setup2FAFlow() {
     const pinInputs = document.querySelectorAll('.pin-input');
 
     pinInputs.forEach((input, idx) => {
       input.addEventListener('input', (e) => {
-        e.target.value = e.target.value.replace(/[^0-9]/g, '').slice(-1); 
+        e.target.value = e.target.value.replace(/[^0-9]/g, '').slice(-1);
 
         if (e.target.value) {
           e.target.classList.add('filled');
@@ -191,7 +180,6 @@ export default class AuthController {
         }
       });
 
-      // Volta input.
       input.addEventListener('keydown', (e) => {
         if (e.key === 'Backspace' && !e.target.value && idx > 0) {
           pinInputs[idx - 1].focus();
@@ -201,7 +189,6 @@ export default class AuthController {
       });
     });
 
-    // Clique verificar.
     document.getElementById('btn-verificar').addEventListener('click', () => {
       this.enviarCodigoVerificacao();
     });
@@ -213,12 +200,11 @@ export default class AuthController {
     const codigoDigitado = Array.from(pinInputs).map(i => i.value).join('');
 
     if (codigoDigitado.length < 4) {
-      this.view.showAlert('alerta-2fa', 'error', 'Por favor, digite todos os 4 dígitos do código.');
+      this.view.showAlert('alerta-2fa', 'error', 'Digite os 4 dígitos.');
       return;
     }
 
     try {
-      // Fetch 2FA.
       const response = await fetch('backend/verificar_2fa.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -238,15 +224,22 @@ export default class AuthController {
         sucessoDiv.innerHTML = `
           <div class="success-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
           <h2 class="success-title">CONTA ATIVADA!</h2>
-          <p class="success-msg">Seu e-mail foi validado com sucesso no banco de dados. Redirecionando para a tela de login...</p>
+          <p class="success-msg">Redirecionando para o login...</p>
         `;
         document.getElementById('tela-2fa').appendChild(sucessoDiv);
         setTimeout(() => {
-          location.reload(); 
-        }, 3500);
+          sucessoDiv.remove();
+          document.getElementById('estado-pin').style.display = 'block';
+          
+          pinInputs.forEach(inp => { inp.value = ''; inp.classList.remove('filled'); });
+          
+          this.view.switchTab('login');
+          document.getElementById('login-email').value = window.emailEmVerificacao || '';
+          document.getElementById('login-senha').focus();
+        }, 3000);
 
       } else {
-        this.view.showAlert('alerta-2fa', 'error', data.message || 'Código de ativação inválido.');
+        this.view.showAlert('alerta-2fa', 'error', data.message || 'Código inválido.');
         pinInputs.forEach(inp => {
           inp.classList.add('error-shake');
           setTimeout(() => { inp.classList.remove('error-shake'); inp.value = ''; inp.classList.remove('filled'); }, 500);
@@ -255,7 +248,7 @@ export default class AuthController {
       }
 
     } catch (error) {
-      this.view.showAlert('alerta-2fa', 'error', 'Falha ao conectar com o servidor de validação.');
+      this.view.showAlert('alerta-2fa', 'error', 'Falha ao conectar com o servidor.');
     }
   }
 }
